@@ -126,7 +126,7 @@ The models are trained on the relational SQLite database `data/inventory.db` (~4
    - We query `vendor_invoice` joined with an aggregated CTE from `purchases` on `PONumber`.
    - Computes line-item sums (`total_item_quantity`, `total_item_dollars`) and receiving delay using SQLite's `julianday(ReceivingDate) - julianday(PODate)`.
 2. **Ground Truth Labeling Rule:**
-   - Invoices are labeled as risky (`flag_invoice = 1`) if there is a monetary discrepancy $(|\text{invoice\_dollars} - \text{total\_item\_dollars}| > \$5)$ or abnormal receiving delays $(\text{avg\_receiving\_delay} > 10\text{ days})$.
+   - Invoices are labeled as risky (`flag_invoice = 1`) if there is a monetary discrepancy (`|invoice_dollars - total_item_dollars| > $5`) or abnormal receiving delays (`avg_receiving_delay > 10 days`).
 3. **Statistical Feature Selection & Imputation:**
    - Conducted two-sample Welch's t-tests ($p < 0.05$) to verify significant variance across flagged vs. normal populations.
    - Selected top features: `invoice_quantity`, `invoice_dollars`, `Freight`, `total_item_quantity`, and `total_item_dollars`. Missing values are handled via `SimpleImputer(strategy="median")`.
